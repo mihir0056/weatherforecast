@@ -1,0 +1,1 @@
+INSERT INTO WeatherData VALUES ('fremont', 'bad weather', '40','50','80','01-01-2017','3.1','200');
