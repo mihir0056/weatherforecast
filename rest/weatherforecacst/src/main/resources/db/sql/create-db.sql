@@ -1,4 +1,4 @@
---DROP TABLE users IF EXISTS;
+DROP TABLE WeatherData IF EXISTS;
 
 CREATE TABLE WeatherData (
   city VARCHAR(30),

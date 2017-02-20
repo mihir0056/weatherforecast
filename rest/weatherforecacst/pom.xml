@@ -17,6 +17,7 @@
 		<junit.version>4.12</junit.version>
 		<dbcp.version>2.1</dbcp.version>
 		<hsqldb.version>2.3.2</hsqldb.version>
+		<jackson.library>2.7.5</jackson.library>
 	</properties>
 	
   <dependencies>
@@ -84,7 +85,11 @@
 			<version>${dbcp.version}</version>
 		</dependency>
 
-		
+		<dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
+            <version>${jackson.library}</version>
+        </dependency>
 
 		<!-- jstl -->
 		<dependency>
