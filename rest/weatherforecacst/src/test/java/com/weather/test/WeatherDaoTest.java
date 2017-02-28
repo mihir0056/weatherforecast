@@ -1,4 +1,4 @@
-package com.weather.test;
+/*package com.weather.test;
 
 import java.util.List;
 
@@ -87,4 +87,4 @@ public class WeatherDaoTest {
         db.shutdown();
     }
 
-}
+}*/
