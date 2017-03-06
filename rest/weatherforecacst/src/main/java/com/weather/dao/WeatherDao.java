@@ -5,9 +5,9 @@ import java.util.List;
 import com.weather.model.WeatherData;
 
 public interface WeatherDao {
+    public boolean insertData(WeatherData var1);
 
-	void insertData(WeatherData input);
-	
-	List<WeatherData> getData();
+    public List<WeatherData> getData();
 
+    public List<WeatherData> getCityData(String var1);
 }

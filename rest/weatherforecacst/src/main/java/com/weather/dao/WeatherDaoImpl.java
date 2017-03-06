@@ -1,71 +1,52 @@
 package com.weather.dao;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import com.weather.dao.WeatherDao;
+import com.weather.dao.WeatherDaoImpl;
+import com.weather.model.WeatherData;
+import com.weather.model.Wind;
+import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import com.weather.model.WeatherData;
 
 @Repository
-public class WeatherDaoImpl implements WeatherDao {
+public class WeatherDaoImpl
+implements WeatherDao {
+    @Autowired
+    private DataSource dataSource;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-	@Autowired 
-	private DataSource dataSource;
-	 
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
-	
-   /* public void setJdbcTemplate(JdbcTemplate jdbcTemplate){
-        this.jdbcTemplate = jdbcTemplate;
-    }*/
+    @Override
+    public boolean insertData(WeatherData input) {
+        try {
+            String sql = "INSERT INTO WeatherData(city,description,humidity,pressure,temperature,creationtime,speed,degree) values(?,?,?,?,?,?,?,?)";
+            this.jdbcTemplate.update(sql, new Object[]{input.getCity(), input.getDescription(), input.getHumidity(), input.getPressure(), input.getTemperature(), input.getTimestamp(), input.getWind().getSpeed(), input.getWind().getDegree()});
+        }
+        catch (Exception e) {
+            System.out.println("Insertion failed." + e);
+            return false;
+        }
+        return true;
+    }
 
-	private static final class WeatherMapper implements RowMapper<WeatherData> {
+    @Override
+    public List<WeatherData> getData() {
+        HashMap params = new HashMap();
+        String sql = "SELECT * FROM WeatherData";
+        List result = this.jdbcTemplate.query(sql, (RowMapper)new WeatherMapper());
+        return result;
+    }
 
-		public WeatherData mapRow(ResultSet rs, int rowNum) throws SQLException {
-			WeatherData data = new WeatherData();
-			data.setCity(rs.getString("city"));
-			data.setDescription(rs.getString("description"));
-
-			return data;
-		}
-	}
-
-	@Override
-	public void insertData(WeatherData input) {
-
-		try{
-			//JdbcTemplate empDAO = applicationContext.getBean(EmployeeDAO.class);	
-			
-		String sql = "INSERT INTO WeatherData(city,description,humidity,pressure,temperature,creationtime,speed,degree) values(?,?,?,?,?,?,?,?)";
-
-		jdbcTemplate.update(sql,new Object[] { input.getCity(), input.getDescription(), input.getHumidity(),
-						input.getPressure(), input.getTemperature(), input.getTimestamp(), input.getWind().getSpeed(),
-						input.getWind().getDegree() });
-		
-		}catch(Exception e){
-			System.out.println("Insertion failed."+e);
-		}
-
-	}
-
-	@Override
-	public List<WeatherData> getData() {
-		Map<String, Object> params = new HashMap<String, Object>();
-
-		String sql = "SELECT * FROM WeatherData";
-		
-		List<WeatherData> result = jdbcTemplate.query(sql, new WeatherMapper());
-
-		return result;
-	}
-
+    @Override
+    public List<WeatherData> getCityData(String cityName) {
+        String sql = "SELECT * FROM WeatherData where city='" + cityName + "'";
+        List result = this.jdbcTemplate.query(sql, (RowMapper)new WeatherMapper());
+        return result;
+    }
 }
